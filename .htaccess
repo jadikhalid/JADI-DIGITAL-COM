@@ -16,3 +16,17 @@
     Deny from all
   </Files>
 </IfModule>
+
+# HTML/PHP : toujours revalider (sinon le navigateur garde d’anciens liens CSS/JS)
+<IfModule mod_headers.c>
+  <FilesMatch "\.(php|html|htm)$">
+    Header set Cache-Control "no-cache, no-store, must-revalidate"
+    Header set Pragma "no-cache"
+    Header set Expires "0"
+  </FilesMatch>
+
+  # Assets versionnés via ?v=filemtime : cache long OK
+  <FilesMatch "\.(css|js|svg|jpg|jpeg|png|webp|woff2?)$">
+    Header set Cache-Control "public, max-age=31536000, immutable"
+  </FilesMatch>
+</IfModule>

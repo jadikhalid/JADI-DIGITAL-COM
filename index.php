@@ -1,16 +1,32 @@
-<?php include 'lang.php'; ?>
+<?php
+include 'lang.php';
+
+header('Cache-Control: no-cache, no-store, must-revalidate');
+header('Pragma: no-cache');
+header('Expires: 0');
+
+/** Bust navigateur : nouvelle URL dès que le fichier change (après deploy). */
+function asset_url(string $path): string
+{
+  $file = __DIR__ . '/' . ltrim($path, './');
+  $version = is_file($file) ? (string) filemtime($file) : (string) time();
+  return './' . ltrim($path, './') . '?v=' . rawurlencode($version);
+}
+?>
 <!doctype html>
 <html lang="<?= $lang ?>">
 
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+  <meta http-equiv="Pragma" content="no-cache" />
   <link rel="icon" href="./img/favicon.svg" type="image/svg+xml" />
   <title><?= __('meta_title') ?></title>
   <link
     href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap"
     rel="stylesheet" />
-  <link rel="stylesheet" href="./style.css" />
+  <link rel="stylesheet" href="<?= asset_url('style.css') ?>" />
 </head>
 
 <body>
@@ -55,7 +71,7 @@
         <p class="section-sub"><?= __('method_sub') ?></p>
         <ol class="steps">
           <li class="step">
-            <span class="step-index">0-1</span>
+            <span class="step-index">01</span>
             <div>
               <h3><?= __('step1_label') ?></h3>
               <p><?= __('step1_text') ?></p>
@@ -190,7 +206,7 @@
     <p class="footer-copy"><?= __('footer_copyright') ?></p>
   </footer>
 
-  <script src="./app.js"></script>
+  <script src="<?= asset_url('app.js') ?>"></script>
 </body>
 
 </html>
