@@ -55,7 +55,7 @@
         <p class="section-sub"><?= __('method_sub') ?></p>
         <ol class="steps">
           <li class="step">
-            <span class="step-index">01</span>
+            <span class="step-index">0-1</span>
             <div>
               <h3><?= __('step1_label') ?></h3>
               <p><?= __('step1_text') ?></p>
