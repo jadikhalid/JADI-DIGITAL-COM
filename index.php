@@ -34,8 +34,7 @@ function asset_url(string $path): string
 
   <header class="topbar">
     <nav class="topbar-nav" aria-label="Primary">
-      <a href="#method"><?= __('nav_method') ?></a>
-      <a href="#deliver"><?= __('nav_deliver') ?></a>
+      <a href="#studio"><?= __('nav_studio') ?></a>
       <a href="#work"><?= __('nav_work') ?></a>
       <a href="#contact"><?= __('nav_contact') ?></a>
     </nav>
@@ -64,52 +63,43 @@ function asset_url(string $path): string
       </div>
     </section>
 
-    <section class="section" id="method">
+    <section class="section section-studio" id="studio">
       <div class="inner">
-        <p class="section-tag"><?= __('method_tag') ?></p>
-        <h2 class="section-title"><?= __('method_title') ?></h2>
-        <p class="section-sub"><?= __('method_sub') ?></p>
-        <ol class="steps">
-          <li class="step">
-            <span class="step-index">01</span>
-            <div>
-              <h3><?= __('step1_label') ?></h3>
-              <p><?= __('step1_text') ?></p>
-            </div>
+        <p class="section-tag"><?= __('studio_tag') ?></p>
+        <h2 class="section-title"><?= __('studio_title') ?></h2>
+        <p class="section-sub"><?= __('studio_sub') ?></p>
+
+        <ol class="pipeline">
+          <li class="pipeline-step">
+            <span class="pipeline-index mono">01</span>
+            <h3><?= __('step1_label') ?></h3>
+            <p><?= __('step1_text') ?></p>
           </li>
-          <li class="step">
-            <span class="step-index">02</span>
-            <div>
-              <h3><?= __('step2_label') ?></h3>
-              <p><?= __('step2_text') ?></p>
-            </div>
+          <li class="pipeline-step">
+            <span class="pipeline-index mono">02</span>
+            <h3><?= __('step2_label') ?></h3>
+            <p><?= __('step2_text') ?></p>
           </li>
-          <li class="step">
-            <span class="step-index">03</span>
-            <div>
-              <h3><?= __('step3_label') ?></h3>
-              <p><?= __('step3_text') ?></p>
-            </div>
+          <li class="pipeline-step">
+            <span class="pipeline-index mono">03</span>
+            <h3><?= __('step3_label') ?></h3>
+            <p><?= __('step3_text') ?></p>
           </li>
         </ol>
+
+        <div class="signal-rail">
+          <p class="signal-label mono"><?= __('signal_label') ?></p>
+          <ul class="signal-list">
+            <li><?= __('deliver_1') ?></li>
+            <li><?= __('deliver_2') ?></li>
+            <li><?= __('deliver_3') ?></li>
+            <li><?= __('deliver_4') ?></li>
+          </ul>
+        </div>
       </div>
     </section>
 
-    <section class="section section-alt" id="deliver">
-      <div class="inner">
-        <p class="section-tag"><?= __('deliver_tag') ?></p>
-        <h2 class="section-title"><?= __('deliver_title') ?></h2>
-        <p class="section-sub"><?= __('deliver_sub') ?></p>
-        <ul class="deliver-list">
-          <li><span class="mono">→</span> <?= __('deliver_1') ?></li>
-          <li><span class="mono">→</span> <?= __('deliver_2') ?></li>
-          <li><span class="mono">→</span> <?= __('deliver_3') ?></li>
-          <li><span class="mono">→</span> <?= __('deliver_4') ?></li>
-        </ul>
-      </div>
-    </section>
-
-    <section class="section" id="work">
+    <section class="section section-alt" id="work">
       <div class="inner">
         <p class="section-tag"><?= __('work_tag') ?></p>
         <h2 class="section-title"><?= __('work_title') ?></h2>
@@ -165,7 +155,7 @@ function asset_url(string $path): string
       </div>
     </section>
 
-    <section class="section section-alt" id="contact">
+    <section class="section" id="contact">
       <div class="inner contact-inner">
         <div class="contact-copy">
           <p class="section-tag"><?= __('contact_tag') ?></p>
