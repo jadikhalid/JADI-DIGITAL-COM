@@ -1,0 +1,550 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>JADI DIGITAL — Agence digitale AI-native</title>
+  <link rel="preconnect" href="https://fonts.bunny.net">
+  <link href="https://fonts.bunny.net/css?family=figtree:400,500,600,700,800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --ink: #0b1220;
+      --muted: #5b6578;
+      --line: rgba(15, 23, 42, 0.1);
+      --teal: #14b8a6;
+      --indigo: #4f46e5;
+      --amber: #f59e0b;
+      --paper: #ffffff;
+      --soft: #f4f6fb;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    @page {
+      size: A4;
+      margin: 0;
+    }
+
+    html, body {
+      background: #e8ecf4;
+      color: var(--ink);
+      font-family: Figtree, ui-sans-serif, system-ui, sans-serif;
+      -webkit-print-color-adjust: exact;
+      print-color-adjust: exact;
+    }
+
+    .page {
+      width: 210mm;
+      height: 297mm;
+      margin: 12px auto;
+      background: var(--paper);
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 18px 50px rgba(15, 23, 42, 0.12);
+    }
+
+    @media print {
+      html, body { background: none; }
+      .page {
+        margin: 0;
+        box-shadow: none;
+        page-break-after: always;
+        break-after: page;
+      }
+      .page:last-child {
+        page-break-after: auto;
+        break-after: auto;
+      }
+    }
+
+    .accent-bar {
+      position: absolute;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      width: 7px;
+      background: linear-gradient(180deg, var(--teal), var(--indigo) 55%, var(--amber));
+    }
+
+    .pad {
+      padding: 18mm 18mm 16mm 20mm;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
+
+    .brand-mark {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .brand-mark img {
+      width: 42px;
+      height: auto;
+    }
+
+    .brand-name {
+      letter-spacing: 0.18em;
+      font-size: 13px;
+    }
+
+    .brand-name strong { font-weight: 800; }
+    .brand-name span { font-weight: 300; color: #0f766e; }
+
+    .eyebrow {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--indigo);
+    }
+
+    .hero-title {
+      margin-top: 18px;
+      font-size: 34px;
+      line-height: 1.12;
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      max-width: 15ch;
+    }
+
+    .hero-sub {
+      margin-top: 14px;
+      font-size: 14.5px;
+      line-height: 1.55;
+      color: var(--muted);
+      max-width: 48ch;
+    }
+
+    .meta-row {
+      margin-top: 18px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 7px 12px;
+      border-radius: 999px;
+      background: var(--soft);
+      border: 1px solid var(--line);
+      font-size: 11px;
+      font-weight: 600;
+      color: #334155;
+    }
+
+    .chip::before {
+      content: "";
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--teal);
+    }
+
+    .section {
+      margin-top: 22px;
+    }
+
+    .section-title {
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--ink);
+      margin-bottom: 12px;
+    }
+
+    .grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+
+    .card {
+      background: var(--soft);
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 14px 14px 13px;
+    }
+
+    .card h3 {
+      font-size: 13.5px;
+      font-weight: 700;
+      margin-bottom: 6px;
+    }
+
+    .card p {
+      font-size: 12px;
+      line-height: 1.45;
+      color: var(--muted);
+    }
+
+    .method {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+    }
+
+    .step {
+      border-top: 2px solid var(--indigo);
+      padding-top: 10px;
+    }
+
+    .step .idx {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      color: var(--teal);
+      margin-bottom: 4px;
+    }
+
+    .step h3 {
+      font-size: 15px;
+      font-weight: 750;
+      margin-bottom: 4px;
+    }
+
+    .step p {
+      font-size: 12px;
+      line-height: 1.4;
+      color: var(--muted);
+    }
+
+    .footer-strip {
+      margin-top: auto;
+      padding-top: 16px;
+      border-top: 1px solid var(--line);
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      font-size: 11px;
+      color: var(--muted);
+    }
+
+    .footer-strip strong { color: var(--ink); }
+
+    /* Page 2 */
+    .page-dark {
+      background: linear-gradient(160deg, #0b1220 0%, #151c2f 55%, #1a1630 100%);
+      color: #e8eef7;
+    }
+
+    .page-dark .eyebrow { color: #5eead4; }
+    .page-dark .section-title { color: #fff; }
+    .page-dark .hero-title { color: #fff; max-width: 18ch; font-size: 28px; }
+    .page-dark .hero-sub { color: #a8b3c7; }
+    .page-dark .card {
+      background: rgba(255, 255, 255, 0.05);
+      border-color: rgba(255, 255, 255, 0.1);
+    }
+    .page-dark .card h3 { color: #fff; }
+    .page-dark .card p { color: #a8b3c7; }
+    .page-dark .footer-strip {
+      border-top-color: rgba(255, 255, 255, 0.12);
+      color: #93a0b5;
+    }
+    .page-dark .footer-strip strong { color: #fff; }
+
+    .proof {
+      display: grid;
+      grid-template-columns: 1.15fr 0.85fr;
+      gap: 12px;
+    }
+
+    .proof-main {
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 16px;
+      padding: 16px;
+    }
+
+    .proof-main .label {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--amber);
+      margin-bottom: 8px;
+    }
+
+    .proof-main h3 {
+      font-size: 18px;
+      font-weight: 750;
+      margin-bottom: 8px;
+    }
+
+    .proof-main p {
+      font-size: 12.5px;
+      line-height: 1.5;
+      color: #b7c2d6;
+    }
+
+    .proof-main a {
+      display: inline-block;
+      margin-top: 10px;
+      color: #5eead4;
+      font-size: 12px;
+      font-weight: 600;
+      text-decoration: none;
+    }
+
+    .why-list {
+      list-style: none;
+      display: grid;
+      gap: 8px;
+    }
+
+    .why-list li {
+      display: grid;
+      grid-template-columns: 18px 1fr;
+      gap: 8px;
+      font-size: 12.5px;
+      line-height: 1.45;
+      color: #c5cfdf;
+    }
+
+    .why-list li::before {
+      content: "→";
+      color: #5eead4;
+      font-weight: 700;
+    }
+
+    .cta-box {
+      margin-top: 18px;
+      border-radius: 16px;
+      padding: 16px 18px;
+      background: linear-gradient(135deg, rgba(20, 184, 166, 0.18), rgba(79, 70, 229, 0.22));
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      display: flex;
+      justify-content: space-between;
+      gap: 16px;
+      align-items: center;
+    }
+
+    .cta-box h3 {
+      font-size: 16px;
+      font-weight: 750;
+      margin-bottom: 4px;
+    }
+
+    .cta-box p {
+      font-size: 12px;
+      color: #b7c2d6;
+    }
+
+    .cta-contacts {
+      text-align: right;
+      font-size: 12px;
+      line-height: 1.55;
+      color: #dbe4f3;
+    }
+
+    .cta-contacts strong {
+      color: #fff;
+      font-weight: 700;
+    }
+
+    .glow {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(40px);
+      pointer-events: none;
+    }
+
+    .glow-1 {
+      width: 220px;
+      height: 220px;
+      right: -40px;
+      top: -40px;
+      background: rgba(20, 184, 166, 0.22);
+    }
+
+    .glow-2 {
+      width: 260px;
+      height: 260px;
+      left: -60px;
+      bottom: 40px;
+      background: rgba(79, 70, 229, 0.2);
+    }
+  </style>
+</head>
+<body>
+  <!-- PAGE 1 -->
+  <section class="page">
+    <div class="accent-bar" aria-hidden="true"></div>
+    <div class="pad">
+      <header class="brand">
+        <div class="brand-mark">
+          <img src="../img/jadi-digital-mark.png" alt="JADI DIGITAL">
+          <p class="brand-name"><strong>JADI</strong> <span>DIGITAL</span></p>
+        </div>
+        <p class="eyebrow">Agence digitale · France</p>
+      </header>
+
+      <p class="eyebrow" style="margin-top:28px">Studio AI-native</p>
+      <h1 class="hero-title">On code ce que vous ressentez.</h1>
+      <p class="hero-sub">
+        JADI DIGITAL conçoit et livre des produits digitaux pour les startups, PME et organisations
+        françaises — rapidement, avec précision, et une approche AI-native de bout en bout.
+      </p>
+
+      <div class="meta-row">
+        <span class="chip">Paris</span>
+        <span class="chip">Produits digitaux 360°</span>
+        <span class="chip">IA en production</span>
+        <span class="chip">Réponse sous 24 h</span>
+      </div>
+
+      <section class="section">
+        <h2 class="section-title">Ce que nous livrons</h2>
+        <div class="grid-2">
+          <article class="card">
+            <h3>Applications &amp; interfaces</h3>
+            <p>Web, applications natives et logiciels desktop — fiables, performants, prêts à évoluer.</p>
+          </article>
+          <article class="card">
+            <h3>Agents &amp; automatisations IA</h3>
+            <p>Agents métier, orchestration de modèles et automatisations intégrées à vos process.</p>
+          </article>
+          <article class="card">
+            <h3>Pipelines RAG &amp; recherche</h3>
+            <p>Connaissance entreprise exploitable : RAG, recherche sémantique, assistants documentaires.</p>
+          </article>
+          <article class="card">
+            <h3>MVP → V1 production</h3>
+            <p>Du cadrage au déploiement : un produit live, documenté, avec pipelines CI/CD.</p>
+          </article>
+        </div>
+      </section>
+
+      <section class="section">
+        <h2 class="section-title">Méthode</h2>
+        <div class="method">
+          <div class="step">
+            <p class="idx">01</p>
+            <h3>Brief</h3>
+            <p>Intention, contraintes, ROI attendu — un cadrage net en une session.</p>
+          </div>
+          <div class="step">
+            <p class="idx">02</p>
+            <h3>Build</h3>
+            <p>Prototype et itération en vibe coding : IA dans le flux, craft dans chaque décision.</p>
+          </div>
+          <div class="step">
+            <p class="idx">03</p>
+            <h3>Ship</h3>
+            <p>Mise en production propre, mesurable, prête à scaler.</p>
+          </div>
+        </div>
+      </section>
+
+      <div class="footer-strip">
+        <p><strong>jadi-digital.com</strong></p>
+        <p>Document commercial — Agence digitale</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- PAGE 2 -->
+  <section class="page page-dark">
+    <div class="glow glow-1" aria-hidden="true"></div>
+    <div class="glow glow-2" aria-hidden="true"></div>
+    <div class="pad">
+      <header class="brand">
+        <div class="brand-mark">
+          <img src="../img/jadi-digital-mark.png" alt="">
+          <p class="brand-name" style="color:#fff"><strong>JADI</strong> <span style="color:#5eead4">DIGITAL</span></p>
+        </div>
+        <p class="eyebrow">Preuve &amp; prochain pas</p>
+      </header>
+
+      <section class="section" style="margin-top:26px">
+        <h2 class="section-title">Réalisation phare</h2>
+        <div class="proof">
+          <article class="proof-main">
+            <p class="label">Case study</p>
+            <h3>Talents du Maroc</h3>
+            <p>
+              Plateforme marketplace talents &amp; entreprises — conception et livraison bout en bout
+              par JADI DIGITAL. Un produit digital live, orienté matching, recrutement et abonnements.
+            </p>
+            <a href="https://talentsdumaroc.com">talentsdumaroc.com →</a>
+          </article>
+          <article class="card">
+            <h3>Aussi</h3>
+            <p style="margin-bottom:10px">
+              <strong style="color:#fff">MyCopy.digital</strong><br>
+              IA / digital twin — une IA entraînée pour être vous.
+            </p>
+            <p>mycopy.digital</p>
+          </article>
+        </div>
+      </section>
+
+      <section class="section">
+        <h2 class="section-title">Pourquoi JADI DIGITAL</h2>
+        <div class="grid-2">
+          <article class="card">
+            <h3>Expertise terrain</h3>
+            <ul class="why-list" style="margin-top:8px">
+              <li>5+ ans d’ingénierie logicielle et de pratiques AI</li>
+              <li>Agents, RAG, orchestration et intégration produit</li>
+              <li>Full stack : web, native, desktop</li>
+            </ul>
+          </article>
+          <article class="card">
+            <h3>Vision business</h3>
+            <ul class="why-list" style="margin-top:8px">
+              <li>Fondateur : Khalid Jadi — AI engineer</li>
+              <li>Ingénieur EMI, génie industriel</li>
+              <li>10+ ans de management opérationnel &amp; stratégique</li>
+            </ul>
+          </article>
+        </div>
+      </section>
+
+      <section class="section">
+        <h2 class="section-title">Pour qui</h2>
+        <div class="grid-2">
+          <article class="card">
+            <h3>Startups &amp; scale-ups</h3>
+            <p>MVP exigeant, V1 production, accélération produit sans sacrifier la qualité.</p>
+          </article>
+          <article class="card">
+            <h3>PME &amp; organisations</h3>
+            <p>Modernisation digitale, assistants IA métier, automatisations à ROI mesurable.</p>
+          </article>
+        </div>
+      </section>
+
+      <div class="cta-box">
+        <div>
+          <h3>Discutons de votre projet</h3>
+          <p>Premier échange gratuit. Réponse sous 24 heures.</p>
+        </div>
+        <div class="cta-contacts">
+          <div><strong>jadi-digital.com</strong></div>
+          <div>contact@jadi-digital.com</div>
+          <div>Paris, France</div>
+        </div>
+      </div>
+
+      <div class="footer-strip">
+        <p><strong>JADI DIGITAL</strong> — Studio digital AI-native</p>
+        <p>© 2026 · Confidentiel — usage prospection</p>
+      </div>
+    </div>
+  </section>
+</body>
+</html>
