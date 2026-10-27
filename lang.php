@@ -1,6 +1,31 @@
 <?php
 
-$lang = isset($_GET['lang']) && $_GET['lang'] === 'en' ? 'en' : 'fr';
+$allowedLangs = ['fr', 'en'];
+
+// Changement de langue → cookie + redirection vers une URL propre (sans ?lang=)
+if (isset($_GET['lang']) && in_array($_GET['lang'], $allowedLangs, true)) {
+    $chosen = $_GET['lang'];
+    setcookie('jadi_lang', $chosen, [
+        'expires' => time() + 60 * 60 * 24 * 365,
+        'path' => '/',
+        'secure' => !empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off',
+        'httponly' => true,
+        'samesite' => 'Lax',
+    ]);
+    $_COOKIE['jadi_lang'] = $chosen;
+
+    $path = parse_url($_SERVER['REQUEST_URI'] ?? '/', PHP_URL_PATH);
+    if (!is_string($path) || $path === '') {
+        $path = '/';
+    }
+
+    header('Location: ' . $path, true, 303);
+    exit;
+}
+
+$lang = (
+    isset($_COOKIE['jadi_lang']) && in_array($_COOKIE['jadi_lang'], $allowedLangs, true)
+) ? $_COOKIE['jadi_lang'] : 'fr';
 
 $translations = [
     'fr' => [
@@ -94,6 +119,32 @@ $translations = [
             'message_required' => 'Rédigez votre message.',
             'message_min' => 'Le message doit contenir au moins 20 caractères.',
         ],
+        'footer' => [
+            'tagline' => 'Studio digital AI-native.',
+            'nav_title' => 'Navigation',
+            'nav_offers' => 'Offres',
+            'nav_founder' => 'Fondateur',
+            'nav_contact' => 'Contact',
+            'contact_title' => 'Coordonnées',
+            'email' => 'contact@jadi-digital.com',
+            'phone' => '+33 X XX XX XX XX',
+            'address' => 'Paris, France',
+            'social_title' => 'Réseaux',
+            'social_linkedin' => 'LinkedIn',
+            'social_linkedin_url' => '#',
+            'social_x' => 'X',
+            'social_x_url' => '#',
+            'social_github' => 'GitHub',
+            'social_github_url' => '#',
+            'legal_title' => 'Légal',
+            'legal_mentions' => 'Mentions légales',
+            'legal_mentions_url' => '#',
+            'legal_privacy' => 'Confidentialité',
+            'legal_privacy_url' => '#',
+            'legal_terms' => 'CGU',
+            'legal_terms_url' => '#',
+            'copyright' => '© 2026 JADI DIGITAL. Tous droits réservés.',
+        ],
     ],
     'en' => [
         'meta_title' => 'JADI DIGITAL — AI-native digital studio in Casablanca',
@@ -186,6 +237,32 @@ $translations = [
             'message_required' => 'Please write your message.',
             'message_min' => 'Message must be at least 20 characters.',
         ],
+        'footer' => [
+            'tagline' => 'AI-native digital studio.',
+            'nav_title' => 'Navigation',
+            'nav_offers' => 'Services',
+            'nav_founder' => 'Founder',
+            'nav_contact' => 'Contact',
+            'contact_title' => 'Contact',
+            'email' => 'contact@jadi-digital.com',
+            'phone' => '+33 X XX XX XX XX',
+            'address' => 'Paris, France',
+            'social_title' => 'Social',
+            'social_linkedin' => 'LinkedIn',
+            'social_linkedin_url' => '#',
+            'social_x' => 'X',
+            'social_x_url' => '#',
+            'social_github' => 'GitHub',
+            'social_github_url' => '#',
+            'legal_title' => 'Legal',
+            'legal_mentions' => 'Legal notice',
+            'legal_mentions_url' => '#',
+            'legal_privacy' => 'Privacy',
+            'legal_privacy_url' => '#',
+            'legal_terms' => 'Terms',
+            'legal_terms_url' => '#',
+            'copyright' => '© 2026 JADI DIGITAL. All rights reserved.',
+        ],
     ],
 ];
 
@@ -213,10 +290,8 @@ function e(?string $value): string
 
 function lang_url(string $newLang): string
 {
-    $params = $_GET;
-    $params['lang'] = $newLang;
-
-    return '?' . http_build_query($params);
+    // Lien de bascule uniquement ; la page revient ensuite sur / (sans query)
+    return '?lang=' . rawurlencode($newLang);
 }
 
 function asset_url(string $path): string

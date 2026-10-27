@@ -11,6 +11,7 @@ $founderStats = __('founder_stats', []);
 $founderSkills = __('founder_skills', []);
 $offers = __('offers', []);
 $form = __('form', []);
+$footer = __('footer', []);
 
 $offerIcons = [
     'M12 21a9.004 9.004 0 0 0 8.716-6.747M12 21a9.004 9.004 0 0 1-8.716-6.747M12 21c2.485 0 4.5-4.03 4.5-9S14.485 3 12 3m0 18c-2.485 0-4.5-4.03-4.5-9S9.515 3 12 3m0 0a8.997 8.997 0 0 1 7.843 4.582M12 3a8.997 8.997 0 0 0-7.843 4.582m15.686 0A11.953 11.953 0 0 1 12 10.5c-2.998 0-5.74-1.1-7.843-2.918m15.686 0A8.959 8.959 0 0 1 21 12c0 .778-.099 1.533-.284 2.253m0 0A17.919 17.919 0 0 1 12 16.5c-3.162 0-6.133-.815-8.716-2.247m0 0A9.015 9.015 0 0 1 3 12c0-1.605.42-3.113 1.157-4.418',
@@ -50,9 +51,9 @@ $offerIcons = [
 </head>
 <body class="bg-white font-sans text-gray-900 antialiased">
   <div class="lang-switcher" aria-label="Language">
-    <a href="<?= e(lang_url('fr')) ?>" class="<?= $lang === 'fr' ? 'is-active' : '' ?>">FR</a>
+    <a href="<?= e(lang_url('fr')) ?>" class="<?= $lang === 'fr' ? 'is-active' : '' ?>"<?= $lang === 'fr' ? ' aria-current="true"' : '' ?>>FR</a>
     <span aria-hidden="true">/</span>
-    <a href="<?= e(lang_url('en')) ?>" class="<?= $lang === 'en' ? 'is-active' : '' ?>">EN</a>
+    <a href="<?= e(lang_url('en')) ?>" class="<?= $lang === 'en' ? 'is-active' : '' ?>"<?= $lang === 'en' ? ' aria-current="true"' : '' ?>>EN</a>
   </div>
 
   <div data-jadi-page>
@@ -118,7 +119,7 @@ $offerIcons = [
       </div>
     </section>
 
-    <section class="bg-gray-50 py-20 sm:py-24" data-jadi-founder>
+    <section id="jadi-founder" class="bg-gray-50 py-20 sm:py-24" data-jadi-founder>
       <div class="mx-auto grid max-w-7xl gap-12 px-4 sm:px-6 lg:grid-cols-[minmax(0,5fr)_minmax(0,7fr)] lg:items-start lg:gap-16 lg:px-8">
         <div class="relative mx-auto w-full max-w-sm lg:max-w-[488px]">
           <div class="absolute -inset-3 rounded-[2rem] bg-gradient-to-br from-teal-300/40 via-indigo-300/30 to-amber-200/40 blur-xl" aria-hidden="true"></div>
@@ -207,18 +208,20 @@ $offerIcons = [
       </div>
     </section>
 
-    <section id="jadi-contact" class="bg-gray-950 py-20 text-white sm:py-24">
-      <div class="mx-auto max-w-xl px-4 sm:px-6 lg:px-8">
+    <section id="jadi-contact" class="relative overflow-hidden bg-indigo-100/80 py-20 sm:py-24">
+      <div class="absolute -left-24 top-0 h-72 w-72 rounded-full bg-indigo-400/25 blur-3xl" aria-hidden="true"></div>
+      <div class="absolute -right-16 bottom-0 h-64 w-64 rounded-full bg-teal-400/20 blur-3xl" aria-hidden="true"></div>
+      <div class="relative mx-auto max-w-xl px-4 sm:px-6 lg:px-8">
         <div class="text-center">
-          <h2 class="text-3xl font-bold tracking-tight sm:text-4xl"><?= e((string) __('contact_title')) ?></h2>
-          <p class="mt-4 text-gray-300"><?= e((string) __('contact_desc')) ?></p>
+          <h2 class="text-3xl font-bold tracking-tight text-gray-950 sm:text-4xl"><?= e((string) __('contact_title')) ?></h2>
+          <p class="mt-4 text-gray-700"><?= e((string) __('contact_desc')) ?></p>
         </div>
 
-        <div id="jadi-contact-form" class="relative mt-10 rounded-2xl bg-white p-6 text-left text-gray-900 shadow-xl sm:p-8">
+        <div id="jadi-contact-form" class="jadi-form-shell relative mt-10 p-6 text-left text-gray-900 sm:p-8">
           <form
             method="POST"
             action="sendEmail.php"
-            class="space-y-4"
+            class="jadi-form space-y-5"
             id="contact-form"
             novalidate
             data-error="<?= e((string) ($form['error'] ?? '')) ?>"
@@ -230,49 +233,51 @@ $offerIcons = [
               <input id="jadi_website" type="text" name="website" tabindex="-1" autocomplete="off">
             </div>
 
-            <div>
-              <label for="jadi_name" class="block text-sm font-medium text-gray-700"><?= e((string) ($form['name'] ?? '')) ?></label>
-              <input
-                id="jadi_name"
-                name="name"
-                type="text"
-                required
-                maxlength="120"
-                autocomplete="name"
-                data-required-message="<?= e((string) ($form['name_required'] ?? '')) ?>"
-                class="mt-1.5 w-full rounded-xl border-gray-300 text-sm text-gray-900 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
-              >
+            <div class="jadi-form-grid">
+              <div class="jadi-field-wrap">
+                <label for="jadi_name"><?= e((string) ($form['name'] ?? '')) ?></label>
+                <input
+                  id="jadi_name"
+                  name="name"
+                  type="text"
+                  required
+                  maxlength="120"
+                  autocomplete="name"
+                  data-required-message="<?= e((string) ($form['name_required'] ?? '')) ?>"
+                  class="jadi-field"
+                >
+              </div>
+
+              <div class="jadi-field-wrap">
+                <label for="jadi_email"><?= e((string) ($form['email'] ?? '')) ?></label>
+                <input
+                  id="jadi_email"
+                  name="email"
+                  type="email"
+                  required
+                  maxlength="255"
+                  autocomplete="email"
+                  data-required-message="<?= e((string) ($form['email_required'] ?? '')) ?>"
+                  data-email-message="<?= e((string) ($form['email_invalid'] ?? '')) ?>"
+                  class="jadi-field"
+                >
+              </div>
             </div>
 
-            <div>
-              <label for="jadi_email" class="block text-sm font-medium text-gray-700"><?= e((string) ($form['email'] ?? '')) ?></label>
-              <input
-                id="jadi_email"
-                name="email"
-                type="email"
-                required
-                maxlength="255"
-                autocomplete="email"
-                data-required-message="<?= e((string) ($form['email_required'] ?? '')) ?>"
-                data-email-message="<?= e((string) ($form['email_invalid'] ?? '')) ?>"
-                class="mt-1.5 w-full rounded-xl border-gray-300 text-sm text-gray-900 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
-              >
-            </div>
-
-            <div>
-              <label for="jadi_company" class="block text-sm font-medium text-gray-700"><?= e((string) ($form['company'] ?? '')) ?></label>
+            <div class="jadi-field-wrap">
+              <label for="jadi_company"><?= e((string) ($form['company'] ?? '')) ?></label>
               <input
                 id="jadi_company"
                 name="company"
                 type="text"
                 maxlength="160"
                 autocomplete="organization"
-                class="mt-1.5 w-full rounded-xl border-gray-300 text-sm text-gray-900 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+                class="jadi-field"
               >
             </div>
 
-            <div>
-              <label for="jadi_message" class="block text-sm font-medium text-gray-700"><?= e((string) ($form['message'] ?? '')) ?></label>
+            <div class="jadi-field-wrap">
+              <label for="jadi_message"><?= e((string) ($form['message'] ?? '')) ?></label>
               <textarea
                 id="jadi_message"
                 name="message"
@@ -281,20 +286,90 @@ $offerIcons = [
                 maxlength="5000"
                 data-required-message="<?= e((string) ($form['message_required'] ?? '')) ?>"
                 data-min-length-message="<?= e((string) ($form['message_min'] ?? '')) ?>"
-                class="mt-1.5 w-full rounded-xl border-gray-300 text-sm text-gray-900 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+                class="jadi-field jadi-field-area"
               ></textarea>
             </div>
 
-            <button
-              type="submit"
-              class="inline-flex w-full items-center justify-center rounded-xl bg-gray-950 px-6 py-3 text-sm font-semibold text-white transition hover:bg-gray-800 disabled:opacity-70"
-            >
-              <?= e((string) ($form['submit'] ?? '')) ?>
+            <button type="submit" class="jadi-submit">
+              <span><?= e((string) ($form['submit'] ?? '')) ?></span>
+              <svg class="jadi-submit-icon" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3"/></svg>
             </button>
           </form>
         </div>
       </div>
     </section>
+
+    <footer class="border-t border-white/10 bg-black text-gray-400">
+      <div class="mx-auto max-w-7xl px-4 py-14 sm:px-6 lg:px-8">
+        <div class="grid gap-10 sm:grid-cols-2 lg:grid-cols-4 lg:gap-8">
+          <div>
+            <p class="text-sm tracking-[0.2em]">
+              <span class="font-extrabold text-white">JADI</span>
+              <span class="font-light text-teal-300"> DIGITAL</span>
+            </p>
+            <p class="mt-4 max-w-xs text-sm leading-relaxed"><?= e((string) ($footer['tagline'] ?? '')) ?></p>
+          </div>
+
+          <div>
+            <p class="text-xs font-semibold uppercase tracking-[0.18em] text-white"><?= e((string) ($footer['nav_title'] ?? '')) ?></p>
+            <ul class="mt-4 space-y-2.5 text-sm">
+              <li><a href="#jadi-offers" class="transition hover:text-white"><?= e((string) ($footer['nav_offers'] ?? '')) ?></a></li>
+              <li><a href="#jadi-founder" class="transition hover:text-white"><?= e((string) ($footer['nav_founder'] ?? '')) ?></a></li>
+              <li><a href="#jadi-contact" class="transition hover:text-white"><?= e((string) ($footer['nav_contact'] ?? '')) ?></a></li>
+            </ul>
+          </div>
+
+          <div>
+            <p class="text-xs font-semibold uppercase tracking-[0.18em] text-white"><?= e((string) ($footer['contact_title'] ?? '')) ?></p>
+            <ul class="mt-4 space-y-2.5 text-sm">
+              <li>
+                <a href="mailto:<?= e((string) ($footer['email'] ?? '')) ?>" class="transition hover:text-white">
+                  <?= e((string) ($footer['email'] ?? '')) ?>
+                </a>
+              </li>
+              <li><?= e((string) ($footer['phone'] ?? '')) ?></li>
+              <li><?= e((string) ($footer['address'] ?? '')) ?></li>
+            </ul>
+          </div>
+
+          <div class="space-y-8">
+            <div>
+              <p class="text-xs font-semibold uppercase tracking-[0.18em] text-white"><?= e((string) ($footer['social_title'] ?? '')) ?></p>
+              <ul class="mt-4 flex flex-wrap gap-x-4 gap-y-2 text-sm">
+                <li>
+                  <a href="<?= e((string) ($footer['social_linkedin_url'] ?? '#')) ?>" class="transition hover:text-white"<?= ($footer['social_linkedin_url'] ?? '#') !== '#' ? ' target="_blank" rel="noopener noreferrer"' : '' ?>>
+                    <?= e((string) ($footer['social_linkedin'] ?? '')) ?>
+                  </a>
+                </li>
+                <li>
+                  <a href="<?= e((string) ($footer['social_x_url'] ?? '#')) ?>" class="transition hover:text-white"<?= ($footer['social_x_url'] ?? '#') !== '#' ? ' target="_blank" rel="noopener noreferrer"' : '' ?>>
+                    <?= e((string) ($footer['social_x'] ?? '')) ?>
+                  </a>
+                </li>
+                <li>
+                  <a href="<?= e((string) ($footer['social_github_url'] ?? '#')) ?>" class="transition hover:text-white"<?= ($footer['social_github_url'] ?? '#') !== '#' ? ' target="_blank" rel="noopener noreferrer"' : '' ?>>
+                    <?= e((string) ($footer['social_github'] ?? '')) ?>
+                  </a>
+                </li>
+              </ul>
+            </div>
+
+            <div>
+              <p class="text-xs font-semibold uppercase tracking-[0.18em] text-white"><?= e((string) ($footer['legal_title'] ?? '')) ?></p>
+              <ul class="mt-4 space-y-2.5 text-sm">
+                <li><a href="<?= e((string) ($footer['legal_mentions_url'] ?? '#')) ?>" class="transition hover:text-white"><?= e((string) ($footer['legal_mentions'] ?? '')) ?></a></li>
+                <li><a href="<?= e((string) ($footer['legal_privacy_url'] ?? '#')) ?>" class="transition hover:text-white"><?= e((string) ($footer['legal_privacy'] ?? '')) ?></a></li>
+                <li><a href="<?= e((string) ($footer['legal_terms_url'] ?? '#')) ?>" class="transition hover:text-white"><?= e((string) ($footer['legal_terms'] ?? '')) ?></a></li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <div class="mt-12 border-t border-white/10 pt-6 text-xs text-gray-500">
+          <?= e((string) ($footer['copyright'] ?? '')) ?>
+        </div>
+      </div>
+    </footer>
   </div>
 
   <div id="toast-root" class="toast-root" aria-live="polite"></div>
