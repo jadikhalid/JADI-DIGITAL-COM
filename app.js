@@ -1,173 +1,127 @@
 document.addEventListener("DOMContentLoaded", () => {
-  const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-
-  document.querySelectorAll(".btn-scroll-contact").forEach((btn) => {
-    btn.addEventListener("click", () => {
-      document.getElementById("contact")?.scrollIntoView({ behavior: "smooth" });
+  document.querySelectorAll("[data-scroll-to]").forEach((button) => {
+    button.addEventListener("click", () => {
+      const id = button.getAttribute("data-scroll-to");
+      if (!id) return;
+      document.getElementById(id)?.scrollIntoView({ behavior: "smooth", block: "start" });
     });
   });
 
-  document.querySelectorAll(".btn-scroll-work").forEach((btn) => {
-    btn.addEventListener("click", () => {
-      document.getElementById("work")?.scrollIntoView({ behavior: "smooth" });
-    });
-  });
-
-  if (!reduceMotion) {
-    const root = document.documentElement;
-    let ticking = false;
-    window.addEventListener(
-      "scroll",
-      () => {
-        if (ticking) return;
-        ticking = true;
-        requestAnimationFrame(() => {
-          root.style.setProperty("--scroll-y", String(window.scrollY));
-          ticking = false;
-        });
-      },
-      { passive: true },
-    );
-  }
-
-  if (!reduceMotion) {
-    const primary = document.querySelector(".hero .btn-primary");
-    if (primary) {
-      setTimeout(() => primary.classList.add("cta-pulse"), 900);
-    }
-  }
-
-  initWorkSlider();
   initContactForm();
 });
 
-function initWorkSlider() {
-  const root = document.querySelector("[data-work-slider]");
-  if (!root) return;
-
-  const slides = Array.from(root.querySelectorAll("[data-work-slide]"));
-  const prevBtn = root.querySelector("[data-work-prev]");
-  const nextBtn = root.querySelector("[data-work-next]");
-  const indexEl = root.querySelector("[data-work-index]");
-  if (slides.length === 0) return;
-
-  let index = Math.max(
-    0,
-    slides.findIndex((slide) => slide.classList.contains("is-active")),
-  );
-
-  const pad = (n) => String(n).padStart(2, "0");
-
-  const show = (next) => {
-    const target = (next + slides.length) % slides.length;
-    if (target === index && root.dataset.ready === "1") return;
-    index = target;
-    slides.forEach((slide, i) => {
-      slide.classList.toggle("is-active", i === index);
-      slide.setAttribute("aria-hidden", i === index ? "false" : "true");
-    });
-    if (indexEl) {
-      indexEl.textContent = `${pad(index + 1)} / ${pad(slides.length)}`;
-    }
-  };
-
-  prevBtn?.addEventListener("click", () => show(index - 1));
-  nextBtn?.addEventListener("click", () => show(index + 1));
-
-  root.addEventListener("keydown", (e) => {
-    if (e.key === "ArrowLeft") {
-      e.preventDefault();
-      show(index - 1);
-    }
-    if (e.key === "ArrowRight") {
-      e.preventDefault();
-      show(index + 1);
-    }
-  });
-
-  let touchX = null;
-  root.addEventListener(
-    "touchstart",
-    (e) => {
-      touchX = e.changedTouches[0]?.clientX ?? null;
-    },
-    { passive: true },
-  );
-  root.addEventListener(
-    "touchend",
-    (e) => {
-      if (touchX == null) return;
-      const dx = (e.changedTouches[0]?.clientX ?? touchX) - touchX;
-      if (Math.abs(dx) > 48) {
-        show(dx < 0 ? index + 1 : index - 1);
-      }
-      touchX = null;
-    },
-    { passive: true },
-  );
-
-  slides.forEach((slide, i) => {
-    slide.setAttribute("aria-hidden", i === index ? "false" : "true");
-  });
-  if (indexEl) {
-    indexEl.textContent = `${pad(index + 1)} / ${pad(slides.length)}`;
-  }
-  root.dataset.ready = "1";
-}
-
 function initContactForm() {
   const form = document.getElementById("contact-form");
-  if (!form) return;
+  const shell = document.getElementById("jadi-contact-form");
+  if (!form || !shell) return;
 
-  const submitBtn = form.querySelector(".form-submit");
+  const submitBtn = form.querySelector('button[type="submit"]');
   const labels = {
-    default: submitBtn?.dataset.label || "Send",
-    sending: submitBtn?.dataset.sending || "Sending…",
-    ok: submitBtn?.dataset.ok || "Message sent.",
-    err: submitBtn?.dataset.err || "Send failed.",
-    net: submitBtn?.dataset.net || "Network error.",
+    error: form.dataset.error || "Error",
+    sent: form.dataset.sent || "Sent",
+    sending: form.dataset.sending || "Sending…",
   };
 
-  form.addEventListener("submit", async (e) => {
-    e.preventDefault();
-    if (!submitBtn) return;
+  form.addEventListener("submit", async (event) => {
+    event.preventDefault();
+    if (form.dataset.submitting === "1") return;
 
-    submitBtn.disabled = true;
-    submitBtn.textContent = labels.sending;
+    const validationError = validateContactForm(form);
+    if (validationError) {
+      pushToast("err", validationError);
+      return;
+    }
+
+    form.dataset.submitting = "1";
+    if (submitBtn) submitBtn.disabled = true;
+    setFormLoading(shell, true);
 
     try {
-      const res = await fetch(form.getAttribute("action") || "sendEmail.php", {
+      const response = await fetch(form.getAttribute("action") || "sendEmail.php", {
         method: "POST",
         body: new FormData(form),
         headers: { Accept: "application/json" },
       });
 
-      let data = null;
+      let payload = null;
       try {
-        data = await res.json();
+        payload = await response.json();
       } catch {
-        throw new Error("bad-json");
+        payload = null;
       }
 
-      const ok = res.ok && data && data.status === "success";
-      showStatus(ok ? labels.ok : labels.err, ok);
+      const ok = response.ok && payload && payload.status === "success";
+      pushToast(ok ? "ok" : "err", ok ? labels.sent : labels.error);
       if (ok) form.reset();
     } catch {
-      showStatus(labels.net, false);
+      pushToast("err", labels.error);
     } finally {
-      submitBtn.disabled = false;
-      submitBtn.textContent = labels.default;
+      form.dataset.submitting = "0";
+      if (submitBtn) submitBtn.disabled = false;
+      setFormLoading(shell, false);
     }
   });
 }
 
-function showStatus(message, isSuccess) {
-  document.querySelectorAll(".status-toast").forEach((el) => el.remove());
+function validateContactForm(form) {
+  const name = form.querySelector("#jadi_name");
+  const email = form.querySelector("#jadi_email");
+  const message = form.querySelector("#jadi_message");
+
+  const nameValue = String(name?.value || "").trim();
+  if (nameValue.length < 2) {
+    return name?.dataset.requiredMessage || "Name required";
+  }
+
+  const emailValue = String(email?.value || "").trim();
+  if (emailValue === "") {
+    return email?.dataset.requiredMessage || "Email required";
+  }
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailValue)) {
+    return email?.dataset.emailMessage || "Invalid email";
+  }
+
+  const messageValue = String(message?.value || "").trim();
+  if (messageValue === "") {
+    return message?.dataset.requiredMessage || "Message required";
+  }
+  if (messageValue.length < 20) {
+    return message?.dataset.minLengthMessage || "Message too short";
+  }
+
+  return null;
+}
+
+function setFormLoading(shell, loading) {
+  shell.querySelector(".form-overlay")?.remove();
+  if (!loading) {
+    shell.removeAttribute("aria-busy");
+    return;
+  }
+
+  shell.setAttribute("aria-busy", "true");
+  const overlay = document.createElement("div");
+  overlay.className = "form-overlay";
+  overlay.setAttribute("aria-hidden", "true");
+  overlay.innerHTML = `
+    <div class="form-overlay-card">
+      <div class="form-spinner"></div>
+    </div>
+  `;
+  shell.appendChild(overlay);
+}
+
+function pushToast(type, message) {
+  if (!message) return;
+
+  const root = document.getElementById("toast-root");
+  if (!root) return;
 
   const toast = document.createElement("div");
-  toast.className = `status-toast ${isSuccess ? "ok" : "err"}`;
+  toast.className = `toast ${type === "ok" ? "ok" : "err"}`;
   toast.setAttribute("role", "status");
   toast.textContent = message;
-  document.body.appendChild(toast);
-  setTimeout(() => toast.remove(), 4500);
+  root.appendChild(toast);
+
+  window.setTimeout(() => toast.remove(), 4500);
 }

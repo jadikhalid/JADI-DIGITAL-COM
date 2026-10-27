@@ -18,6 +18,12 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     exit;
 }
 
+// Honeypot
+if (trim((string) ($_POST['website'] ?? '')) !== '') {
+    echo json_encode(['status' => 'success']);
+    exit;
+}
+
 $smtpHost = env('SMTP_HOST');
 $smtpUser = env('SMTP_USER');
 $smtpPass = env('SMTP_PASS');
@@ -35,10 +41,9 @@ if ($smtpHost === null || $smtpUser === null || $smtpPass === null || $smtpFrom 
 $name = trim((string) ($_POST['name'] ?? ''));
 $email = trim((string) ($_POST['email'] ?? ''));
 $company = trim((string) ($_POST['company'] ?? ''));
-$subject = trim((string) ($_POST['subject'] ?? 'Contact'));
 $message = trim((string) ($_POST['message'] ?? ''));
 
-if ($name === '' || $message === '' || !filter_var($email, FILTER_VALIDATE_EMAIL)) {
+if (mb_strlen($name) < 2 || $message === '' || mb_strlen($message) < 20 || ! filter_var($email, FILTER_VALIDATE_EMAIL)) {
     http_response_code(422);
     echo json_encode(['status' => 'error', 'message' => 'validation']);
     exit;
@@ -61,7 +66,7 @@ try {
     $mail->addReplyTo($email, $name);
 
     $mail->isHTML(true);
-    $mail->Subject = 'Nouveau contact : ' . $subject;
+    $mail->Subject = 'Contact JADI DIGITAL — ' . $name;
     $mail->Body =
         '<h3>Nouveau message de ' . htmlspecialchars($name, ENT_QUOTES, 'UTF-8') . '</h3>' .
         '<p><strong>Email :</strong> ' . htmlspecialchars($email, ENT_QUOTES, 'UTF-8') . '</p>' .
